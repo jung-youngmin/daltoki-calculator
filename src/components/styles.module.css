@@ -1,0 +1,53 @@
+.myInput::placeholder {
+	color: lightgray;
+}
+
+input.myInput:focus {
+	outline: 1px solid dodgerblue;
+}
+
+.subLabel {
+	display: flex;
+	box-sizing: border-box;
+	font-size: 0.9rem;
+	color: slategray;
+}
+
+.title {
+	display: flex;
+	box-sizing: border-box;
+	flex: 1;
+	flex-direction: column;
+	/* margin-top: 30px; */
+	text-align: center;
+	user-select: none;
+	width: 100%;
+	margin: 0;
+	padding-top: 32px;
+	padding-bottom: 16px;
+}
+@media (hover: hover) and (pointer: fine) {
+	/* when supported */
+	.title:hover {
+		opacity: 0.6;
+	}
+}
+
+.ph8 {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.pv8 {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.chapter-row {
+	border-width: 1px;
+	border-style: solid;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 50px;
+}
