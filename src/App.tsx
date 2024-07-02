@@ -34,6 +34,7 @@ function App() {
 				<div style={{ alignItems: "center" }}>
 					<BaseSettingCard />
 				</div>
+				{/* TODO: lyn nia miho yuna */}
 				<div style={{ flexDirection: "row" }}>
 					<DailyHunting isFirst style={{ marginTop: 30 }} />
 					<DailyHunting style={{ marginTop: 30 }} />

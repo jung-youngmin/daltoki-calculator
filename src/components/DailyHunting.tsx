@@ -161,7 +161,7 @@ export default function DailyHunting(props: IDailyHuntingProps) {
 			<ChapterRow showLabel={props.isFirst} label="무기 손실 X">
 				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
 			</ChapterRow>
-			<ChapterRow showLabel={props.isFirst} img="/imgs/weapon_L1.png">
+			<ChapterRow showLabel={props.isFirst} img="/imgs/weapon_lyn_legend_1.png">
 				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
 					{weaponPerDay.toFixed(4)}
 				</div>
