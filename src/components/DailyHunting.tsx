@@ -11,6 +11,7 @@ import {
 import { BaseSettingContext } from "../context";
 import { dataUtils, huntingGround, stages } from "../data";
 import { IHuntingGround, IWeaponPerDayParam } from "../types/types";
+import Card from "./elements/Card";
 import ChapterRow from "./elements/ChapterRow";
 import Input from "./elements/Input";
 import SelectBox from "./elements/SelectBox";
@@ -109,63 +110,170 @@ export default function DailyHunting(props: IDailyHuntingProps) {
 		return Math.max(perDay, 0);
 	}, [baseSetting.goldenMimicMinus, baseSetting.itemDropPlus, currentStage, monsterPerHour]);
 
-	const containerWidth = props.isFirst ? 160 : 80;
+	// const containerWidth = props.isFirst ? 160 : 80;
 	const itemWidth = 80;
 
 	return (
-		<div
-			style={{
-				borderWidth: 1,
-				borderStyle: "solid",
-				width: containerWidth,
-				...props.style,
-			}}>
-			<ChapterRow showLabel={props.isFirst} label="챕터">
-				<SelectBox
-					optionList={stages.MAIN_STAGE}
-					style={{ width: itemWidth }}
-					onChange={onChangeChapter}
-				/>
-			</ChapterRow>
-			<ChapterRow showLabel={props.isFirst} label="스테이지">
-				<SelectBox
-					optionList={subStageList}
-					style={{ width: itemWidth }}
-					onChange={onChangeStage}
-				/>
-			</ChapterRow>
-			<ChapterRow showLabel={props.isFirst} label="1시간 사냥한 몹수">
-				<Input
-					inputType="number"
-					isRequired={false}
-					inputWidth={itemWidth}
-					value={monsterPerHour.toString()}
-					onChange={onChangeMonster}
-				/>
-			</ChapterRow>
-			<ChapterRow showLabel={props.isFirst} label="1시간 이벤트 몹수">
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
-				{/* <Input
+		<Card flexDirection="column" style={props.style}>
+			<div
+				style={
+					{
+						// borderWidth: 1,
+						// borderStyle: "solid",
+						// width: containerWidth,
+					}
+				}>
+				<ChapterRow showRowTitle={props.isFirst} label="챕터">
+					<SelectBox
+						optionList={stages.MAIN_STAGE}
+						style={{ width: itemWidth }}
+						onChange={onChangeChapter}
+					/>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} label="스테이지">
+					<SelectBox
+						optionList={subStageList}
+						style={{ width: itemWidth }}
+						onChange={onChangeStage}
+					/>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} label="1시간 사냥한 몹수">
+					<Input
+						inputType="number"
+						isRequired={false}
+						inputWidth={itemWidth}
+						value={monsterPerHour.toString()}
+						onChange={onChangeMonster}
+					/>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} label="1시간 이벤트 몹수">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+					{/* <Input
 					inputType="number"
 					isRequired={false}
 					inputWidth={itemWidth}
 					value={monsterPerHour.toString()}
 					onChange={onChangeMonster}
 				/> */}
-			</ChapterRow>
-			<ChapterRow showLabel={props.isFirst} label="등반 효율">
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
-					{`${(currentStage.climbingEfficiency * 100).toFixed(2)}%`}
-				</div>
-			</ChapterRow>
-			<ChapterRow showLabel={props.isFirst} label="무기 손실 X">
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
-			</ChapterRow>
-			<ChapterRow showLabel={props.isFirst} img="/imgs/weapon_lyn_legend_1.png">
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
-					{weaponPerDay.toFixed(4)}
-				</div>
-			</ChapterRow>
-		</div>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} label="등반 효율">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						{`${(currentStage.climbingEfficiency * 100).toFixed(2)}%`}
+					</div>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} label="무기 손실 X">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="weapon_lyn_legend_1.png"
+					label="레1무기">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						{weaponPerDay.toFixed(4)}
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="weapon_enhancer.png"
+					label="무강석">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="skill_enhancer.png"
+					label="스강석">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} imgName="ruby.png" label="루비">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="mysterious_star_piece.png"
+					label="의문별조">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} imgName="gold.png" label="골드">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} label="경험치">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} imgName="friend_tome.png" label="동료서">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="friend_token.png"
+					label="동료증표">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow showRowTitle={props.isFirst} imgName="star_fragment.png" label="별파">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="transcendental_enhancer.png"
+					label="초강석">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="power_star_piece.png"
+					label="힘별조">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="dimensional_shard.png"
+					label="차원조각">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="weapon_draw_ticket.png"
+					label="무뽑권">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+				<ChapterRow
+					showRowTitle={props.isFirst}
+					imgName="curio_summoning_stone.png"
+					label="성물석">
+					<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
+						TODO
+					</div>
+				</ChapterRow>
+			</div>
+		</Card>
 	);
 }

@@ -1,26 +1,25 @@
+import _ from "lodash";
 import { CSSProperties, useCallback, useMemo } from "react";
+import styles from "../styles.module.css";
 import ActionButton from "./ActionButton";
-import styles from "./styles.module.css";
 
-type TData = { label: string; isActive: boolean; onClick: () => void };
+type TData = {
+	readonly label: string;
+	readonly img?: string;
+	readonly isActive: boolean;
+	readonly onClick: () => void;
+};
 
 interface IButtonGroupProps {
 	readonly buttonData: TData[];
-	readonly title: string;
-	readonly buttonSize?: number;
+	readonly title?: string;
+	readonly buttonWidth?: number;
 	readonly style?: CSSProperties;
 	readonly className?: string;
 }
 
 export default function ButtonGroup(props: IButtonGroupProps) {
-	const buttonGroupStyle = useMemo<CSSProperties>(() => {
-		const size = props.buttonSize === undefined ? 70 : props.buttonSize;
-		return {
-			boxSizing: "border-box",
-			justifyContent: "center",
-			width: size,
-		};
-	}, [props.buttonSize]);
+	const { buttonWidth = 70 } = props;
 
 	const lastIndex = useMemo(() => {
 		return props.buttonData.length - 1;
@@ -33,15 +32,24 @@ export default function ButtonGroup(props: IButtonGroupProps) {
 
 			let btnStyles: CSSProperties;
 			if (isFirst) {
-				btnStyles = { borderTopRightRadius: 0, borderBottomRightRadius: 0 };
+				btnStyles = {
+					boxSizing: "border-box",
+					justifyContent: "center",
+					borderTopRightRadius: 0,
+					borderBottomRightRadius: 0,
+				};
 			} else if (isLast) {
 				btnStyles = {
+					boxSizing: "border-box",
+					justifyContent: "center",
 					borderTopLeftRadius: 0,
 					borderBottomLeftRadius: 0,
 					borderLeft: "0.5px solid darkgray",
 				};
 			} else {
 				btnStyles = {
+					boxSizing: "border-box",
+					justifyContent: "center",
 					borderRadius: 0,
 					borderLeft: "0.5px solid darkgray",
 				};
@@ -51,22 +59,27 @@ export default function ButtonGroup(props: IButtonGroupProps) {
 				<ActionButton
 					key={item.label}
 					label={item.label}
+					imgName={item.img}
 					isActive={item.isActive}
-					style={{
-						...buttonGroupStyle,
-						...btnStyles,
-					}}
+					buttonWidth={buttonWidth}
+					style={btnStyles}
 					onClick={item.onClick}
 				/>
 			);
 		},
-		[lastIndex, buttonGroupStyle],
+		[buttonWidth, lastIndex],
 	);
 
 	return (
-		<div className={props.className} style={{ ...props.style }}>
-			<div className={styles.subLabel}>{props.title}</div>
-			<div style={{ display: "flex", flexWrap: "wrap" }}>
+		<div className={props.className} style={{ borderRadius: 16, ...props.style }}>
+			{!_.isUndefined(props.title) && <div className={styles.subLabel}>{props.title}</div>}
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "row",
+					flexWrap: "wrap",
+					backgroundColor: "transparent",
+				}}>
 				{props.buttonData.map(renderButtons)}
 			</div>
 		</div>

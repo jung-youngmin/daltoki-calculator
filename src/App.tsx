@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import appStyle from "./App.module.css";
 import { BaseSettingCard, DailyHunting } from "./components";
+import ButtonGroup from "./components/elements/ButtonGroup";
+import styles from "./components/styles.module.css";
 import { BaseSettingContext } from "./context";
 import { IBaseSettings } from "./types/types";
 // import logo from "./logo.svg";
@@ -14,7 +16,7 @@ function App() {
 	// 	weapon: hh.weapon,
 	// });
 	// console.log("@@@ weaponPerDay", weaponPerDay);
-
+	const [character, setCharacter] = useState<"lyn" | "nia" | "miho" | "yuna">("lyn");
 	const [baseSetting, setBaseSetting] = useState<IBaseSettings>({
 		goldenMimicMinus: 0,
 		expPlus: 0,
@@ -33,14 +35,43 @@ function App() {
 			<div className={appStyle.App}>
 				<div style={{ alignItems: "center" }}>
 					<BaseSettingCard />
+					<ButtonGroup
+						buttonWidth={80}
+						className={`${styles.mt32} ${styles.shadow}`}
+						buttonData={[
+							{
+								label: "린",
+								img: "lyn.png",
+								isActive: character === "lyn",
+								onClick: () => setCharacter("lyn"),
+							},
+							{
+								label: "니아",
+								img: "nia.png",
+								isActive: character === "nia",
+								onClick: () => setCharacter("nia"),
+							},
+							{
+								label: "미호",
+								img: "miho.png",
+								isActive: character === "miho",
+								onClick: () => setCharacter("miho"),
+							},
+							{
+								label: "유나",
+								img: "yuna.png",
+								isActive: character === "yuna",
+								onClick: () => setCharacter("yuna"),
+							},
+						]}
+					/>
 				</div>
-				{/* TODO: lyn nia miho yuna */}
-				<div style={{ flexDirection: "row" }}>
-					<DailyHunting isFirst style={{ marginTop: 30 }} />
-					<DailyHunting style={{ marginTop: 30 }} />
-					<DailyHunting style={{ marginTop: 30 }} />
-					<DailyHunting style={{ marginTop: 30 }} />
-					<DailyHunting style={{ marginTop: 30 }} />
+				<div className={styles.mt32} style={{ flexDirection: "row" }}>
+					<DailyHunting isFirst style={{ marginRight: 8 }} />
+					<DailyHunting style={{ marginRight: 8 }} />
+					<DailyHunting style={{ marginRight: 8 }} />
+					<DailyHunting style={{ marginRight: 8 }} />
+					<DailyHunting />
 				</div>
 
 				<div>{value.baseSetting.goldenMimicMinus}</div>

@@ -23,7 +23,7 @@ module.exports = {
 		],
 		"react/require-default-props": 0,
 		"react/destructuring-assignment": 0,
-		"react/jsx-indent": ["error", "tab"], // jsx에서도 indent tab으로 통일
+		"react/jsx-indent": [1, "tab"], // jsx에서도 indent tab으로 통일
 		"react/jsx-indent-props": [1, "tab"],
 		// "react/jsx-closing-bracket-location": [1, "after-props"],
 		"implicit-arrow-linebreak": 0, // => 화살표 옆에 바로 코드가 오는지

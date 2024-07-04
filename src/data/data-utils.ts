@@ -34,8 +34,18 @@ const getWeaponPerDay = (param: IWeaponPerDayParam) => {
 	);
 };
 
+/**
+ * 이미지 경로 리턴
+ * @param imgName 확장자 포함 파일명
+ * @returns
+ */
+const getImgPath = (imgName: string) => {
+	return `/imgs/${imgName}`;
+};
+
 export default {
 	getMonsterPerHour,
 	getMimicPerHour,
 	getWeaponPerDay,
+	getImgPath,
 };
