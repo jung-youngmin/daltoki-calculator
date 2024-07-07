@@ -27,8 +27,6 @@ export default function ChapterRow(props: PropsWithChildren<IChapterRowProps>) {
 				width: itemWidth,
 				wordBreak: "keep-all",
 				fontSize: "0.7rem",
-				// left: -8,
-				// top: 8,
 				bottom: 4,
 				left: 32,
 			};
@@ -59,7 +57,7 @@ export default function ChapterRow(props: PropsWithChildren<IChapterRowProps>) {
 					{props.label}
 				</div>
 			)}
-			{props.children}
+			{props.showRowTitle !== true && props.children}
 		</div>
 	);
 }

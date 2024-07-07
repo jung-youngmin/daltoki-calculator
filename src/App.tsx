@@ -67,11 +67,9 @@ function App() {
 					/>
 				</div>
 				<div className={styles.mt32} style={{ flexDirection: "row" }}>
-					<DailyHunting isFirst style={{ marginRight: 8 }} />
-					<DailyHunting style={{ marginRight: 8 }} />
-					<DailyHunting style={{ marginRight: 8 }} />
-					<DailyHunting style={{ marginRight: 8 }} />
-					<DailyHunting />
+					<DailyHunting isFirst style={{ marginRight: 8 }} character={character} />
+					<DailyHunting style={{ marginRight: 8 }} character={character} />
+					<DailyHunting style={{ marginRight: 8 }} character={character} />
 				</div>
 
 				<div>{value.baseSetting.goldenMimicMinus}</div>
