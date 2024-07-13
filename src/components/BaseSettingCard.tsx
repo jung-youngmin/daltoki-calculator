@@ -1,19 +1,29 @@
 import _ from "lodash";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { BaseSettingContext } from "../context";
+import { consts } from "../types";
 import Card from "./elements/Card";
 import InputWithTitle from "./elements/InputWithTitle";
 
 export interface IBaseSettingCardProps {}
 
 export default function BaseSettingCard(props: IBaseSettingCardProps) {
-	const { setBaseSetting } = useContext(BaseSettingContext);
+	const { baseSetting, setBaseSetting } = useContext(BaseSettingContext);
+
+	useEffect(() => {
+		if (!_.isEqual(baseSetting, consts.DEFAULT_BASE_SETTING)) {
+			localStorage.setItem(
+				consts.LOCAL_STORAGE_KEYS.baseSetting,
+				JSON.stringify(baseSetting),
+			);
+		}
+	}, [baseSetting]);
 
 	const onChangeGoldenMimic = useCallback(
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				goldenMimicMinus: _.toSafeInteger(text) / 100,
+				goldenMimicMinus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -23,7 +33,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				expPlus: _.toSafeInteger(text) / 100,
+				expPlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -33,7 +43,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				goldPlus: _.toSafeInteger(text) / 100,
+				goldPlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -43,7 +53,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				itemDropPlus: _.toSafeInteger(text) / 100,
+				itemDropPlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -53,7 +63,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				weaponStonePlus: _.toSafeInteger(text) / 100,
+				weaponStonePlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -63,7 +73,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				skillStonePlus: _.toSafeInteger(text) / 100,
+				skillStonePlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -73,7 +83,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				starFragmentPlus: _.toSafeInteger(text) / 100,
+				starFragmentPlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -83,7 +93,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				saiyanStonePlus: _.toSafeInteger(text) / 100,
+				saiyanStonePlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -93,7 +103,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 		(text: string) => {
 			setBaseSetting(prev => ({
 				...prev,
-				dimensionPlus: _.toSafeInteger(text) / 100,
+				dimensionPlus: _.toNumber(text),
 			}));
 		},
 		[setBaseSetting],
@@ -101,12 +111,13 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 
 	return (
 		<div style={{ maxWidth: 400 }}>
-			<Card title="기본 설정" flexDirection="column">
+			<Card title="기본 설정">
 				<InputWithTitle
 					title="황금미믹 리젠 감소"
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.goldenMimicMinus.toString()}
 					onChangeText={onChangeGoldenMimic}
 				/>
 				<InputWithTitle
@@ -114,6 +125,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.expPlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeExp}
 				/>
@@ -122,6 +134,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.goldPlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeGold}
 				/>
@@ -130,6 +143,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.itemDropPlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeItemDrop}
 				/>
@@ -138,6 +152,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.weaponStonePlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeWeaponStone}
 				/>
@@ -146,6 +161,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.skillStonePlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeSkillStone}
 				/>
@@ -154,6 +170,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.starFragmentPlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeStarFragment}
 				/>
@@ -162,6 +179,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.saiyanStonePlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeSaiyanStone}
 				/>
@@ -170,6 +188,7 @@ export default function BaseSettingCard(props: IBaseSettingCardProps) {
 					placeholder="%"
 					inputType="number"
 					unit="%"
+					value={baseSetting.dimensionPlus.toString()}
 					style={{ marginTop: 16 }}
 					onChangeText={onChangeDimension}
 				/>

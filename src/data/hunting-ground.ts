@@ -639,7 +639,7 @@ const weaponData: IWeapon[] = [
 		drop: 0.06,
 		U1: 0,
 		E4: 0,
-		E3: 0.1,
+		E3: 1,
 		E2: 0,
 		E1: 0,
 	},
@@ -1642,6 +1642,13 @@ const weaponData: IWeapon[] = [
 	// #endregion
 ];
 
+// weaponData.forEach(item => {
+// 	const { E1, E2, E3, E4, U1 } = item;
+// 	if (E1 + E2 + E3 + E4 + U1 !== 1) {
+// 		console.log("@@@ item ", item);
+// 	}
+// });
+
 const getIdx = (chapter: number, stage: number) => {
 	switch (chapter) {
 		case 5:
@@ -1697,4 +1704,5 @@ export default {
 	NiaHuntingGround,
 	MihoHuntingGround,
 	YunaHuntingGround,
+	getIdx,
 };

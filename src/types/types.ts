@@ -1,3 +1,5 @@
+export type TChapters = 5 | 6 | 7 | 8 | 9;
+
 /**
  * 무기 드랍 관련 정보
  */
@@ -27,6 +29,7 @@ export interface IHuntingGround {
 // Params
 export interface IWeaponPerDayParam {
 	readonly monsterPerHour: number;
+	readonly eventMonsterPerHour: number;
 	readonly goldenMimicMinus: number;
 	readonly itemDropPlus: number;
 	readonly weapon: IWeapon;
@@ -42,4 +45,12 @@ export interface IBaseSettings {
 	readonly starFragmentPlus: number;
 	readonly saiyanStonePlus: number;
 	readonly dimensionPlus: number;
+}
+
+export interface IHuntingData {
+	chapter: TChapters;
+	stage: number;
+	monsterPerHour: number;
+	eventMonsterPerHour: number;
+	weaponPerDay: number;
 }

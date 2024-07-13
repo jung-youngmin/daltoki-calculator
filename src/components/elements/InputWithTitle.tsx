@@ -7,6 +7,7 @@ export interface IInputWithTitleProps {
 	readonly title: string;
 	readonly inputType: "number" | "text";
 	readonly onChangeText: (text: string) => void;
+	readonly value?: string;
 	readonly placeholder?: string;
 	readonly unit?: string;
 	readonly style?: CSSProperties;
@@ -29,6 +30,7 @@ export default function InputWithTitle(props: IInputWithTitleProps) {
 					inputType={props.inputType}
 					onChange={props.onChangeText}
 					isRequired={false}
+					value={props.value}
 				/>
 				{!_.isUndefined(props.unit) && (
 					<div className={styles.subLabel} style={{ marginLeft: 4 }}>

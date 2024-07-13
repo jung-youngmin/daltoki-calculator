@@ -2,11 +2,16 @@ import _ from "lodash";
 import { CSSProperties, PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { dataUtils } from "../../data";
 import styles from "../styles.module.css";
+import Card from "./Card";
 
 export interface IChapterRowProps {
 	readonly showRowTitle?: boolean;
 	readonly label?: string;
 	readonly imgName?: string;
+	readonly isFirst?: boolean;
+	readonly isLast?: boolean;
+	readonly hideShadow?: boolean;
+	readonly style?: CSSProperties;
 }
 
 export default function ChapterRow(props: PropsWithChildren<IChapterRowProps>) {
@@ -38,26 +43,57 @@ export default function ChapterRow(props: PropsWithChildren<IChapterRowProps>) {
 		};
 	}, [showImg]);
 
+	const itemStyle = useMemo<CSSProperties>(() => {
+		if (props.isFirst) {
+			return {
+				borderTopRightRadius: 0,
+				borderBottomRightRadius: 0,
+			};
+		}
+		if (props.isLast) {
+			return {
+				borderTopLeftRadius: 0,
+				borderBottomLeftRadius: 0,
+			};
+		}
+		return {
+			borderTopLeftRadius: 0,
+			borderTopRightRadius: 0,
+			borderBottomLeftRadius: 0,
+			borderBottomRightRadius: 0,
+		};
+	}, [props.isFirst, props.isLast]);
+
 	return (
-		<div className={styles["chapter-row"]}>
-			{showImg && (
-				<div style={{ width: itemWidth }}>
-					<img
-						src={dataUtils.getImgPath(props.imgName)}
-						alt={props.label}
-						width={itemWidth / 2}
-						height={itemWidth / 2}
-						style={{ objectFit: "contain" }}
-						onError={() => setImgError(true)}
-					/>
-				</div>
-			)}
-			{showLabel && (
-				<div className={styles.subLabel} style={labelStyle}>
-					{props.label}
-				</div>
-			)}
-			{props.showRowTitle !== true && props.children}
-		</div>
+		<Card
+			hideShadow={props.hideShadow}
+			style={{
+				...itemStyle,
+				paddingTop: 4,
+				paddingBottom: 4,
+				marginTop: 8,
+				...props.style,
+			}}>
+			<div className={styles["chapter-row"]}>
+				{showImg && (
+					<div style={{ width: itemWidth }}>
+						<img
+							src={dataUtils.getImgPath(props.imgName)}
+							alt={props.label}
+							width={itemWidth / 2}
+							height={itemWidth / 2}
+							style={{ objectFit: "contain" }}
+							onError={() => setImgError(true)}
+						/>
+					</div>
+				)}
+				{showLabel && (
+					<div className={styles.subLabel} style={labelStyle}>
+						{props.label}
+					</div>
+				)}
+				{props.showRowTitle !== true && props.children}
+			</div>
+		</Card>
 	);
 }

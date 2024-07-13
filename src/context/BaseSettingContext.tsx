@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { IBaseSettings } from "../types/types";
+import { IBaseSettings } from "../types";
 
 const BaseSettingContext = createContext<{
 	baseSetting: IBaseSettings;

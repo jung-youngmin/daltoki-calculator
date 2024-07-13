@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import _ from "lodash";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import appStyle from "./App.module.css";
-import { BaseSettingCard, DailyHunting } from "./components";
+import { BaseSettingCard, DailyHunting, DailyHuntingTitle } from "./components";
 import ButtonGroup from "./components/elements/ButtonGroup";
 import styles from "./components/styles.module.css";
 import { BaseSettingContext } from "./context";
-import { IBaseSettings } from "./types/types";
+import { dataUtils } from "./data";
+import { consts, IBaseSettings, IHuntingData, typeUtils } from "./types";
 // import logo from "./logo.svg";
 
 function App() {
@@ -17,18 +19,78 @@ function App() {
 	// });
 	// console.log("@@@ weaponPerDay", weaponPerDay);
 	const [character, setCharacter] = useState<"lyn" | "nia" | "miho" | "yuna">("lyn");
-	const [baseSetting, setBaseSetting] = useState<IBaseSettings>({
-		goldenMimicMinus: 0,
-		expPlus: 0,
-		goldPlus: 0,
-		itemDropPlus: 0,
-		weaponStonePlus: 0,
-		skillStonePlus: 0,
-		starFragmentPlus: 0,
-		saiyanStonePlus: 0,
-		dimensionPlus: 0,
-	});
+	const [lynHunting, setLynHunting] = useState<IHuntingData[]>([
+		consts.DEFAULT_HUNTIN_DATA,
+		consts.DEFAULT_HUNTIN_DATA,
+	]);
+	// const [niaHunting, setNiaHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
+	// const [mihoHunting, setMihoHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
+	// const [yunaHunting, setYunaHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
+	const [weaponList, setWeaponList] = useState<number[]>(new Array(2).fill(0));
+	const [monsterList, setMonsterList] = useState<number[]>(new Array(2).fill(0));
+	const [dataList, setDataList] = useState<IHuntingData[]>(new Array(2).fill(0));
+
+	const [baseSetting, setBaseSetting] = useState<IBaseSettings>(consts.DEFAULT_BASE_SETTING);
 	const value = useMemo(() => ({ baseSetting, setBaseSetting }), [baseSetting]);
+
+	useEffect(() => {
+		const { LOCAL_STORAGE_KEYS } = consts;
+		const baseSet = localStorage.getItem(LOCAL_STORAGE_KEYS.baseSetting);
+		if (_.isString(baseSet)) {
+			const obj = JSON.parse(baseSet);
+			if (typeUtils.isBaseSettings(obj)) {
+				setBaseSetting(obj);
+			}
+		}
+
+		setLynHunting(dataUtils.getHuntingDataLocalStorage(LOCAL_STORAGE_KEYS.lynHuntingData));
+		// TODO
+		// setNiaHunting(getSavedHuntingData(LOCAL_STORAGE_KEYS.niaHuntingData));
+		// setMihoHunting()
+		// setYunaHunting()
+	}, []);
+
+	const onChangeWeaponPerDay = useCallback((index: number, weaponPerDay: number) => {
+		console.log("@@@ onChangeWeaponPerDay", index, weaponPerDay);
+		setWeaponList(prev => {
+			if (_.isUndefined(prev[index])) {
+				return prev;
+			}
+
+			// eslint-disable-next-line no-param-reassign
+			prev[index] = weaponPerDay;
+			return prev.slice();
+		});
+	}, []);
+
+	const onChangeMonserPerHour = useCallback(
+		(index: number, monsterPerHour: number, eventPerHour: number) => {
+			console.log("@@@ onChangeMonserPerHour", index, monsterPerHour, eventPerHour);
+			setMonsterList(prev => {
+				if (_.isUndefined(prev[index])) {
+					return prev;
+				}
+
+				// eslint-disable-next-line no-param-reassign
+				prev[index] = Math.max(monsterPerHour - eventPerHour, 0);
+				return prev.slice();
+			});
+		},
+		[],
+	);
+
+	const onChangeHuntingData = useCallback((index: number, data: IHuntingData) => {
+		console.log("@@@ onChangeHuntingData", index, data);
+		setDataList(prev => {
+			if (_.isUndefined(prev[index])) {
+				return prev;
+			}
+
+			// eslint-disable-next-line no-param-reassign
+			prev[index] = data;
+			return prev.slice();
+		});
+	}, []);
 
 	return (
 		<BaseSettingContext.Provider value={value}>
@@ -65,11 +127,28 @@ function App() {
 							},
 						]}
 					/>
-				</div>
-				<div className={styles.mt32} style={{ flexDirection: "row" }}>
-					<DailyHunting isFirst style={{ marginRight: 8 }} character={character} />
-					<DailyHunting style={{ marginRight: 8 }} character={character} />
-					<DailyHunting style={{ marginRight: 8 }} character={character} />
+					<div className={styles.mt32} style={{ flexDirection: "row" }}>
+						<DailyHuntingTitle />
+						{character === "lyn" &&
+							_.map(lynHunting, (item, idx) => {
+								return (
+									<DailyHunting
+										key={`${item.chapter}-${item.stage}-${idx}`}
+										character="lyn"
+										colIdx={idx}
+										// onChangeWeaponPerDay={onChangeWeaponPerDay}
+										// onChangeMonserPerHour={onChangeMonserPerHour}
+										huntingDataList={dataList}
+										onChangeHuntingData={onChangeHuntingData}
+										// weaponDayList={weaponList}
+										// monsterHourList={monsterList}
+										isLast={lynHunting.length === idx + 1}
+									/>
+								);
+							})}
+						{/* <DailyHunting character={character} />
+						<DailyHunting character={character} isLast /> */}
+					</div>
 				</div>
 
 				<div>{value.baseSetting.goldenMimicMinus}</div>

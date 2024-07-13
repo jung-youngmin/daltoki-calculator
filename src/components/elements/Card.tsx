@@ -1,11 +1,9 @@
-import { Property } from "csstype";
 import { CSSProperties, PropsWithChildren, useState } from "react";
+import styles from "../styles.module.css";
 import TouchableTitle from "./TouchableTitle";
 
 export interface ICardProps {
 	readonly title?: string;
-	readonly flexDirection: Property.FlexDirection;
-	readonly flexWrap?: Property.FlexWrap;
 	readonly hideShadow?: boolean;
 	readonly showCard?: boolean;
 	readonly style?: CSSProperties;
@@ -13,15 +11,7 @@ export interface ICardProps {
 }
 
 export default function Card(props: PropsWithChildren<ICardProps>) {
-	const {
-		title = "",
-		flexDirection,
-		flexWrap,
-		hideShadow = false,
-		showCard = true,
-		style,
-		className,
-	} = props;
+	const { title = "", hideShadow = false, showCard = true, style, className } = props;
 
 	const [isActive, setIsActive] = useState(showCard);
 
@@ -36,16 +26,9 @@ export default function Card(props: PropsWithChildren<ICardProps>) {
 				/>
 			)}
 			<div
-				className={className}
+				className={`${styles.card} ${hideShadow ? "" : styles.shadow} ${className}`}
 				style={{
-					boxSizing: "border-box",
 					display: isActive ? "flex" : "none",
-					flexDirection,
-					flexWrap,
-					backgroundColor: "white",
-					borderRadius: 16,
-					padding: 16,
-					boxShadow: hideShadow ? "none" : "0px 0px 16px 0px #cfcfcf",
 					...style,
 				}}>
 				{props.children}
