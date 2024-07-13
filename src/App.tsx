@@ -10,14 +10,6 @@ import { consts, IBaseSettings, IHuntingData, typeUtils } from "./types";
 // import logo from "./logo.svg";
 
 function App() {
-	// const hh = huntingGround.LynHuntingGround[0];
-	// const weaponPerDay = dataUtils.getWeaponPerDay({
-	// 	monsterPerHour: dataUtils.getMonsterPerHour(6885, 0),
-	// 	goldenMimicMinus: dataUtils.getMimicPerHour(0),
-	// 	itemDropPlus: 0.45,
-	// 	weapon: hh.weapon,
-	// });
-	// console.log("@@@ weaponPerDay", weaponPerDay);
 	const [character, setCharacter] = useState<"lyn" | "nia" | "miho" | "yuna">("lyn");
 	const [lynHunting, setLynHunting] = useState<IHuntingData[]>([
 		consts.DEFAULT_HUNTIN_DATA,
@@ -26,8 +18,6 @@ function App() {
 	// const [niaHunting, setNiaHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
 	// const [mihoHunting, setMihoHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
 	// const [yunaHunting, setYunaHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
-	const [weaponList, setWeaponList] = useState<number[]>(new Array(2).fill(0));
-	const [monsterList, setMonsterList] = useState<number[]>(new Array(2).fill(0));
 	const [dataList, setDataList] = useState<IHuntingData[]>(new Array(2).fill(0));
 
 	const [baseSetting, setBaseSetting] = useState<IBaseSettings>(consts.DEFAULT_BASE_SETTING);
@@ -50,37 +40,7 @@ function App() {
 		// setYunaHunting()
 	}, []);
 
-	const onChangeWeaponPerDay = useCallback((index: number, weaponPerDay: number) => {
-		console.log("@@@ onChangeWeaponPerDay", index, weaponPerDay);
-		setWeaponList(prev => {
-			if (_.isUndefined(prev[index])) {
-				return prev;
-			}
-
-			// eslint-disable-next-line no-param-reassign
-			prev[index] = weaponPerDay;
-			return prev.slice();
-		});
-	}, []);
-
-	const onChangeMonserPerHour = useCallback(
-		(index: number, monsterPerHour: number, eventPerHour: number) => {
-			console.log("@@@ onChangeMonserPerHour", index, monsterPerHour, eventPerHour);
-			setMonsterList(prev => {
-				if (_.isUndefined(prev[index])) {
-					return prev;
-				}
-
-				// eslint-disable-next-line no-param-reassign
-				prev[index] = Math.max(monsterPerHour - eventPerHour, 0);
-				return prev.slice();
-			});
-		},
-		[],
-	);
-
 	const onChangeHuntingData = useCallback((index: number, data: IHuntingData) => {
-		console.log("@@@ onChangeHuntingData", index, data);
 		setDataList(prev => {
 			if (_.isUndefined(prev[index])) {
 				return prev;
@@ -136,12 +96,8 @@ function App() {
 										key={`${item.chapter}-${item.stage}-${idx}`}
 										character="lyn"
 										colIdx={idx}
-										// onChangeWeaponPerDay={onChangeWeaponPerDay}
-										// onChangeMonserPerHour={onChangeMonserPerHour}
 										huntingDataList={dataList}
 										onChangeHuntingData={onChangeHuntingData}
-										// weaponDayList={weaponList}
-										// monsterHourList={monsterList}
 										isLast={lynHunting.length === idx + 1}
 									/>
 								);
