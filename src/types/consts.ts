@@ -33,7 +33,7 @@ const DEFAULT_HUNTIN_DATA: IHuntingData = {
 	stage: 1,
 	monsterPerHour: 0,
 	eventMonsterPerHour: 0,
-	weaponPerDay: 0,
+	// weaponPerDay: 0,
 };
 
 const LOCAL_STORAGE_KEYS = {

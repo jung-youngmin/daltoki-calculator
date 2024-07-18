@@ -1,5 +1,12 @@
 import _ from "lodash";
-import { consts, IHuntingData, IHuntingGround, IWeaponPerDayParam, typeUtils } from "../types";
+import {
+	consts,
+	IHuntingData,
+	IHuntingGround,
+	IWeaponPerDayParam,
+	TCharacters,
+	typeUtils,
+} from "../types";
 import huntingGround from "./hunting-ground";
 
 const isSameStage = (
@@ -65,45 +72,36 @@ const getWeaponPerDay = (param: IWeaponPerDayParam) => {
 };
 
 const getNoWeaponLoss = (
-	character: "lyn" | "nia" | "miho" | "yuna",
-	dataList: IHuntingData[],
+	huntingGroundList: IHuntingGround[],
+	maxWeaponData: IHuntingData,
 	curStage: IHuntingGround,
 	goldenMimicRegen: number,
 ) => {
-	const maxWeapon = _.maxBy(dataList, item => item.weaponPerDay);
-	if (_.isUndefined(maxWeapon)) {
-		return 0;
-	}
-
-	if (isSameStage(maxWeapon, curStage)) {
-		return maxWeapon.monsterPerHour;
+	if (isSameStage(maxWeaponData, curStage)) {
+		return maxWeaponData.monsterPerHour;
 	}
 
 	const mimic = getMimicPerHour(goldenMimicRegen);
 
 	// 최대 무기 효율이 현재 사냥터보다 높은 스테이지임?
-	const maxIdx = huntingGround.getIdx(maxWeapon.chapter, maxWeapon.stage);
+	const maxIdx = huntingGround.getIdx(maxWeaponData.chapter, maxWeaponData.stage);
 	const curIdx = huntingGround.getIdx(curStage.chapter, curStage.stage);
 	if (maxIdx > curIdx) {
 		let expN = 1;
 		for (let index = curIdx; index < maxIdx; index++) {
-			if (character === "lyn") {
-				expN *= 1 + huntingGround.LynHuntingGround[index].nextClimbingEfficiency;
-			}
+			expN *= 1 + huntingGroundList[index].nextClimbingEfficiency;
 		}
 		// ({"다음 인덱스의 무기획득량"}-{"시간당 미믹"})*(1+{"다음 인덱스의 등반효율"})+{"시간당 미믹"},
-		return (maxWeapon.monsterPerHour - mimic) * expN + mimic;
+		return (maxWeaponData.monsterPerHour - mimic) * expN + mimic;
 	}
 
 	let expN = 1;
 	for (let index = curIdx; index > maxIdx; index--) {
-		if (character === "lyn") {
-			expN *= 1 + huntingGround.LynHuntingGround[index].climbingEfficiency;
-		}
+		expN *= 1 + huntingGroundList[index].climbingEfficiency;
 	}
 
 	// ({"이전 인덱스의 무기획득량"}-{"시간당 미믹"})/({"현재 인덱스의 등반효율"}+1)+{"시간당 미믹"}
-	return (maxWeapon.monsterPerHour - mimic) / expN + mimic;
+	return (maxWeaponData.monsterPerHour - mimic) / expN + mimic;
 };
 
 /**
@@ -162,6 +160,46 @@ const setHuntingDataLocalStorage = (
 	localStorage.setItem(storageKey, JSON.stringify(data));
 };
 
+const getHuntingGroundList = (character: TCharacters) => {
+	const { LynHuntingGround, NiaHuntingGround, MihoHuntingGround, YunaHuntingGround } =
+		huntingGround;
+
+	let ground: IHuntingGround[];
+	switch (character) {
+		case "lyn":
+			ground = LynHuntingGround;
+			break;
+		case "nia":
+			ground = NiaHuntingGround;
+			break;
+		case "miho":
+			ground = MihoHuntingGround;
+			break;
+		case "yuna":
+			ground = YunaHuntingGround;
+			break;
+		default:
+			ground = LynHuntingGround;
+	}
+	return ground;
+};
+
+const getMaxValueIndex = (arr: number[]) => {
+	if (arr.length === 0) {
+		return 0;
+	}
+
+	let max = arr[0];
+	let maxIndex = 0;
+	for (let i = 1; i < arr.length; i++) {
+		if (arr[i] > max) {
+			maxIndex = i;
+			max = arr[i];
+		}
+	}
+	return maxIndex;
+};
+
 export default {
 	isSameStage,
 	getMonsterPerHour,
@@ -171,4 +209,6 @@ export default {
 	getImgPath,
 	getHuntingDataLocalStorage,
 	setHuntingDataLocalStorage,
+	getHuntingGroundList,
+	getMaxValueIndex,
 };

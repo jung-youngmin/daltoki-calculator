@@ -46,6 +46,10 @@ input.myInput:focus {
 	padding-bottom: 8px;
 }
 
+.pr16 {
+	padding-right: 16px;
+}
+
 .chapter-row {
 	display: flex;
 	flex-direction: row;
@@ -67,4 +71,15 @@ input.myInput:focus {
 	border-bottom-left-radius: 16px;
 	border-bottom-right-radius: 16px;
 	padding: 16px;
+}
+
+.data-item {
+	width: 80px;
+	text-align: right;
+	padding-right: 8px;
+}
+
+.highlight {
+	box-shadow: inset 0px -10px 0 #d9fcdb;
+	font-weight: bold;
 }

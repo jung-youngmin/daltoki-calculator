@@ -1,5 +1,7 @@
 export type TChapters = 5 | 6 | 7 | 8 | 9;
 
+export type TCharacters = "lyn" | "nia" | "miho" | "yuna";
+
 /**
  * 무기 드랍 관련 정보
  */
@@ -52,5 +54,9 @@ export interface IHuntingData {
 	stage: number;
 	monsterPerHour: number;
 	eventMonsterPerHour: number;
-	weaponPerDay: number;
+	// weaponPerDay: number;
+}
+
+export interface ICalculatedData {
+	readonly weaponPerDay: number;
 }

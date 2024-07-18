@@ -8,3 +8,4 @@ export { default as DailyHunting } from "./DailyHunting";
 export { default as DailyHuntingTitle } from "./DailyHuntingTitle";
 export { default as Card } from "./elements/Card";
 export { default as TouchableTitle } from "./elements/TouchableTitle";
+export { default as HuntingSheet } from "./HuntingSheet";

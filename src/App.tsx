@@ -1,24 +1,15 @@
 import _ from "lodash";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import appStyle from "./App.module.css";
-import { BaseSettingCard, DailyHunting, DailyHuntingTitle } from "./components";
+import { BaseSettingCard, HuntingSheet } from "./components";
 import ButtonGroup from "./components/elements/ButtonGroup";
 import styles from "./components/styles.module.css";
 import { BaseSettingContext } from "./context";
-import { dataUtils } from "./data";
-import { consts, IBaseSettings, IHuntingData, typeUtils } from "./types";
+import { consts, IBaseSettings, TCharacters, typeUtils } from "./types";
 // import logo from "./logo.svg";
 
 function App() {
-	const [character, setCharacter] = useState<"lyn" | "nia" | "miho" | "yuna">("lyn");
-	const [lynHunting, setLynHunting] = useState<IHuntingData[]>([
-		consts.DEFAULT_HUNTIN_DATA,
-		consts.DEFAULT_HUNTIN_DATA,
-	]);
-	// const [niaHunting, setNiaHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
-	// const [mihoHunting, setMihoHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
-	// const [yunaHunting, setYunaHunting] = useState<IHuntingData>(consts.DEFAULT_HUNTIN_DATA);
-	const [dataList, setDataList] = useState<IHuntingData[]>(new Array(2).fill(0));
+	const [character, setCharacter] = useState<TCharacters>("lyn");
 
 	const [baseSetting, setBaseSetting] = useState<IBaseSettings>(consts.DEFAULT_BASE_SETTING);
 	const value = useMemo(() => ({ baseSetting, setBaseSetting }), [baseSetting]);
@@ -32,24 +23,6 @@ function App() {
 				setBaseSetting(obj);
 			}
 		}
-
-		setLynHunting(dataUtils.getHuntingDataLocalStorage(LOCAL_STORAGE_KEYS.lynHuntingData));
-		// TODO
-		// setNiaHunting(getSavedHuntingData(LOCAL_STORAGE_KEYS.niaHuntingData));
-		// setMihoHunting()
-		// setYunaHunting()
-	}, []);
-
-	const onChangeHuntingData = useCallback((index: number, data: IHuntingData) => {
-		setDataList(prev => {
-			if (_.isUndefined(prev[index])) {
-				return prev;
-			}
-
-			// eslint-disable-next-line no-param-reassign
-			prev[index] = data;
-			return prev.slice();
-		});
 	}, []);
 
 	return (
@@ -87,24 +60,7 @@ function App() {
 							},
 						]}
 					/>
-					<div className={styles.mt32} style={{ flexDirection: "row" }}>
-						<DailyHuntingTitle />
-						{character === "lyn" &&
-							_.map(lynHunting, (item, idx) => {
-								return (
-									<DailyHunting
-										key={`${item.chapter}-${item.stage}-${idx}`}
-										character="lyn"
-										colIdx={idx}
-										huntingDataList={dataList}
-										onChangeHuntingData={onChangeHuntingData}
-										isLast={lynHunting.length === idx + 1}
-									/>
-								);
-							})}
-						{/* <DailyHunting character={character} />
-						<DailyHunting character={character} isLast /> */}
-					</div>
+					<HuntingSheet character={character} />
 				</div>
 
 				<div>{value.baseSetting.goldenMimicMinus}</div>

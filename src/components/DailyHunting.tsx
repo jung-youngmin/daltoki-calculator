@@ -1,31 +1,25 @@
 import _ from "lodash";
-import {
-	ChangeEvent,
-	CSSProperties,
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
-import { BaseSettingContext } from "../context";
+import { ChangeEvent, CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
 import { dataUtils, huntingGround, stages } from "../data";
-import { consts, IHuntingData, IHuntingGround, IWeaponPerDayParam, TChapters } from "../types";
+import { consts, IHuntingData, IHuntingGround, TChapters, TCharacters } from "../types";
 import ChapterRow from "./elements/ChapterRow";
+import HighlightText from "./elements/HighlightText";
 import Input from "./elements/Input";
 import SelectBox from "./elements/SelectBox";
+import styles from "./styles.module.css";
 
 export interface IDailyHuntingProps {
-	readonly character: "lyn" | "nia" | "miho" | "yuna";
+	readonly character: TCharacters;
 	readonly colIdx: number;
-	readonly huntingDataList: IHuntingData[];
 	readonly onChangeHuntingData: (index: number, data: IHuntingData) => void;
 	readonly isLast?: boolean;
+	readonly weaponPerDay: number;
+	readonly isMaxWeapon: boolean;
+	readonly noWeaponLoss: number;
+	readonly isMaxNoLoss: boolean;
 }
 
 export default function DailyHunting(props: IDailyHuntingProps) {
-	const { baseSetting } = useContext(BaseSettingContext);
-
 	const [chapter, setChapter] = useState<TChapters>(5);
 	const [stage, setStage] = useState<number>(1);
 	const [monsterPerHour, setMonsterPerHour] = useState<number>(0);
@@ -183,63 +177,16 @@ export default function DailyHunting(props: IDailyHuntingProps) {
 		return curStage;
 	}, [chapter, props.character, stage]);
 
-	const weaponPerDay = useMemo(() => {
-		if (monsterPerHour <= 0) {
-			return 0;
-		}
-
-		const weaponParam: IWeaponPerDayParam = {
-			monsterPerHour: monsterPerHour,
-			eventMonsterPerHour: eventMonsterPerHour,
-			goldenMimicMinus: baseSetting.goldenMimicMinus,
-			itemDropPlus: baseSetting.itemDropPlus,
-			weapon: currentStage.weapon,
-		};
-		const perDay = dataUtils.getWeaponPerDay(weaponParam);
-
-		return perDay;
-	}, [
-		baseSetting.goldenMimicMinus,
-		baseSetting.itemDropPlus,
-		currentStage.weapon,
-		eventMonsterPerHour,
-		monsterPerHour,
-	]);
-
 	const { onChangeHuntingData } = props;
-	// useEffect(() => {
-	// 	// if (weaponPerDay > 0) {
-	// 	// }
-	// 	onChangeWeaponPerDay(props.colIdx, weaponPerDay);
-	// }, [eventMonsterPerHour, monsterPerHour, onChangeWeaponPerDay, props.colIdx, weaponPerDay]);
 
-	// useEffect(() => {
-	// 	onChangeMonserPerHour(props.colIdx, monsterPerHour, eventMonsterPerHour);
-	// }, [eventMonsterPerHour, monsterPerHour, onChangeMonserPerHour, props.colIdx]);
-
-	const huntingData = useMemo<IHuntingData>(() => {
-		return {
+	useEffect(() => {
+		onChangeHuntingData(props.colIdx, {
 			chapter: chapter,
 			stage: stage,
 			monsterPerHour: monsterPerHour,
 			eventMonsterPerHour: eventMonsterPerHour,
-			weaponPerDay: weaponPerDay,
-		};
-	}, [chapter, eventMonsterPerHour, monsterPerHour, stage, weaponPerDay]);
-
-	useEffect(() => {
-		onChangeHuntingData(props.colIdx, huntingData);
-	}, [huntingData, onChangeHuntingData, props.colIdx]);
-
-	const noWeaponLoss = useMemo(() => {
-		const noLoss = dataUtils.getNoWeaponLoss(
-			props.character,
-			props.huntingDataList,
-			currentStage,
-			baseSetting.goldenMimicMinus,
-		);
-		return noLoss;
-	}, [baseSetting.goldenMimicMinus, currentStage, props.character, props.huntingDataList]);
+		});
+	}, [chapter, eventMonsterPerHour, monsterPerHour, onChangeHuntingData, props.colIdx, stage]);
 
 	const upperCardStyle: CSSProperties = {
 		marginTop: 0,
@@ -298,61 +245,63 @@ export default function DailyHunting(props: IDailyHuntingProps) {
 				/>
 			</ChapterRow>
 			<ChapterRow label="등반 효율" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
-					{`${(currentStage.climbingEfficiency * 100).toFixed(2)}%`}
-				</div>
+				<div className={styles["data-item"]}>{`${(
+					currentStage.climbingEfficiency * 100
+				).toFixed(2)}%`}</div>
 			</ChapterRow>
 			<ChapterRow label="무기 손실 X" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
-					{noWeaponLoss.toFixed(1)}
-				</div>
+				<HighlightText
+					text={props.noWeaponLoss.toFixed(1)}
+					isHighlight={props.isMaxNoLoss}
+				/>
 			</ChapterRow>
 			<ChapterRow imgName="weapon_lyn_legend_1.png" label="레1무기" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>
-					{weaponPerDay.toFixed(4)}
-				</div>
+				<HighlightText
+					text={props.weaponPerDay.toFixed(4)}
+					isHighlight={props.isMaxWeapon}
+				/>
 			</ChapterRow>
 			<ChapterRow imgName="weapon_enhancer.png" label="무강석" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="skill_enhancer.png" label="스강석" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="ruby.png" label="루비" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="mysterious_star_piece.png" label="의문별조" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="gold.png" label="골드" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow label="경험치" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="friend_tome.png" label="동료서" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="friend_token.png" label="동료증표" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="star_fragment.png" label="별파" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="transcendental_enhancer.png" label="초강석" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="power_star_piece.png" label="힘별조" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="dimensional_shard.png" label="차원조각" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="weapon_draw_ticket.png" label="무뽑권" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 			<ChapterRow imgName="curio_summoning_stone.png" label="성물석" isLast={props.isLast}>
-				<div style={{ width: itemWidth, textAlign: "right", paddingRight: 16 }}>TODO</div>
+				<div className={styles["data-item"]}>TODO</div>
 			</ChapterRow>
 		</div>
 	);
